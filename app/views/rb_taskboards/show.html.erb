@@ -59,7 +59,9 @@
 
 <%- content_for :view_specific_links do %>
   <% if @sprint.has_burndown? %>
-    <a id='show_charts'><%= l(:label_burndown) %></a>
+    <% if User.current.allowed_to?(:update_remaining_hours, @project) %>
+      <a id='show_charts'><%= l(:label_burndown) %></a>
+    <% end %>
   <% end %>
   <span id="col_width"><%= l(:label_column_width) %>: <input name="col_width"/></span>
   <a id="disable_autorefresh">Disable Auto-refresh</a>
