@@ -23,7 +23,7 @@
                            :format => 'js') %>">
   </script>
   <%# Usability: display default cursor if tasks cannot be dragged %>
-  <% unless User.current.allowed_to?(:update_tasks, @project) %> 
+  <% unless User.current.allowed_to?(:update_tasks, @project) %>
     <style type="text/css">
     #taskboard .issue{cursor:default;}
     </style>
@@ -114,7 +114,9 @@
             <span class="assignee">
               <%= assignee_name_or_empty(story) %>
             </span>
-            <span class="remaininghours">(<%= story.remaining_hours.to_i %> <%= l(:label_hours) %>)</span>
+            <% if User.current.allowed_to?(:view_time_entries, @project) != nil %>
+              <span class="remaininghours">(<%= story.remaining_hours.to_i %> <%= l(:label_hours) %>)</span>
+            <% end %>
           </div>
           <div class="subject"><%= h story.subject %></div>
           <%- if @project != story.project %>
