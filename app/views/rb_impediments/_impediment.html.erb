@@ -9,7 +9,7 @@
     <div class="t"><%= assignee_name_or_empty(impediment) %></div>
     <div class="v"><%= assignee_id_or_empty(impediment) %></div>
   </div>
-  <% if User.current.allowed_to?(:view_time_entries, @project) %>
+  <% if User.current.allowed_to?(:update_remaining_hours, @project) %>
     <div class="remaining_hours editable" fieldname="remaining_hours" fieldlabel="<%=l(:field_remaining_hours)%>"><%= remaining_hours_or_empty(impediment) %></div>
   <% end %>
   <div class="indicator"> </div>

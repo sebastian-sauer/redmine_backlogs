@@ -91,7 +91,7 @@ module BacklogsPlugin
           project = context[:project]
 
           if issue.is_story?
-            if User.current.allowed_to?(:view_time_entries, issue.project) != false
+            if User.current.allowed_to?(:update_remaining_hours, issue.project) != false
               snippet += "<tr><th>#{l(:field_story_points)}</th><td>#{RbStory.find(issue.id).points_display}</td>"
               unless issue.remaining_hours.nil?
                 snippet += "<th>#{l(:field_remaining_hours)}</th><td>#{l_hours(issue.remaining_hours)}</td>"
@@ -110,7 +110,7 @@ module BacklogsPlugin
           end
 
           if issue.is_task? && User.current.allowed_to?(:update_remaining_hours, issue.project) != nil
-            if User.current.allowed_to?(:view_time_entries, project) != false
+            if User.current.allowed_to?(:update_remaining_hours, project) != false
               snippet += "<tr><th>#{l(:field_remaining_hours)}</th><td>#{issue.remaining_hours}</td></tr>"
             end
           end
