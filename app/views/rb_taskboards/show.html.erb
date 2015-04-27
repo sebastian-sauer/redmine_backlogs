@@ -116,7 +116,7 @@
             <span class="assignee">
               <%= assignee_name_or_empty(story) %>
             </span>
-            <% if User.current.allowed_to?(:view_time_entries, @project) != nil %>
+            <% if User.current.allowed_to?(:update_remaining_hours, @project) %>
               <span class="remaininghours">(<%= story.remaining_hours.to_i %> <%= l(:label_hours) %>)</span>
             <% end %>
           </div>
