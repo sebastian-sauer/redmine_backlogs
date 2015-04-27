@@ -66,10 +66,18 @@ class RbMasterBacklogsController < RbApplicationController
     links << {:label => l(:label_task_board),
               :url => url_for(:controller => 'rb_taskboards', :action => 'show', :sprint_id => @sprint, :only_path => true)
              } if @sprint && @sprint.stories.size > 0 && Backlogs.task_workflow(@project) && User.current.allowed_to?(:view_taskboards, @project)
-    links << {:label =>  l(:label_burndown),
-              :url => '#',
-              :classname => 'show_burndown_chart'
-             } if @sprint && @sprint.stories.size > 0 && @sprint.has_burndown?
+
+    # Authorise our burndown - as this shows time entries
+    if User.current.allowed_to?(:update_remaining_hours, @project) != false
+      links << {:label =>  l(:label_burndown),
+                :url => '#',
+                :classname => 'show_burndown_chart'
+               } if @sprint && @sprint.stories.size > 0 && @sprint.has_burndown?
+      links << {:label =>  l(:label_download_sprint),
+                :url => url_for(:controller => 'rb_sprints', :action => 'download', :sprint_id => @sprint, :format => 'xml', :only_path => true)
+               } if @sprint && @sprint.has_burndown?
+    end
+
     links << {:label => l(:label_stories_tasks),
               :url => url_for(:controller => 'rb_queries', :action => 'show', :project_id => @project.id, :sprint_id => @sprint, :only_path => true)
              } if @sprint && @sprint.stories.size > 0
@@ -85,9 +93,6 @@ class RbMasterBacklogsController < RbApplicationController
     links << {:label => l(:label_wiki),
               :url => url_for(:controller => 'rb_wikis', :action => 'show', :sprint_id => @sprint, :only_path => true)
              } if @sprint && @project.enabled_modules.any? {|m| m.name=="wiki" }
-    links << {:label =>  l(:label_download_sprint),
-              :url => url_for(:controller => 'rb_sprints', :action => 'download', :sprint_id => @sprint, :format => 'xml', :only_path => true)
-             } if @sprint && @sprint.has_burndown?
     links << {:label => l(:label_reset),
               :url => url_for(:controller => 'rb_sprints', :action => 'reset', :sprint_id => @sprint, :only_path => true),
               :warning => view_context().escape_javascript(l(:warning_reset_sprint)).gsub(/\/n/, "\n")
@@ -100,7 +105,7 @@ class RbMasterBacklogsController < RbApplicationController
              } if @release
     links << {:label => l(:label_sprint_close),
               :url => url_for(:controller => 'rb_sprints', :action => 'close', :sprint_id => @sprint, :only_path => true)
-              } if @sprint && @sprint.open? && @sprint.stories.open.none? && User.current.allowed_to?(:update_sprints, @project)        
+              } if @sprint && @sprint.open? && @sprint.stories.open.none? && User.current.allowed_to?(:update_sprints, @project)
 
 
     respond_to do |format|
